@@ -23,8 +23,12 @@ def print_header
 end
 
 def print(students)
+  puts "These are all the students whose name begins with 'P'."
   students.each_with_index do |student, index|
-    puts "#{index+1}. #{student[:name]} (#{student[:cohort].capitalize} cohort)"
+    # only print students who name begins with a certain letter
+    if student[:name][0].capitalize == 'P'
+      puts "#{index+1}. #{student[:name]} (#{student[:cohort].capitalize} cohort)"
+    end
   end
 end
 
