@@ -23,10 +23,9 @@ def print_header
 end
 
 def print(students)
-  puts "These are all the students whose name begins with 'P'."
+  puts "These are all the students whose names are shorter than 12 characters."
   students.each_with_index do |student, index|
-    # only print students who name begins with a certain letter
-    if student[:name][0].capitalize == 'P'
+    if student[:name].length < 12
       puts "#{index+1}. #{student[:name]} (#{student[:cohort].capitalize} cohort)"
     end
   end
