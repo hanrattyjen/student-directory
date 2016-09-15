@@ -8,7 +8,7 @@ def input_students
   # while the name is not empty, repeat this code
   while !name.empty? do
     puts "Cohort month:"
-    cohort = gets.chomp.to_sym
+    cohort = gets.chomp
     # Supplying a default value
     if cohort.empty?
       puts "You haven't entered a value. Please contact us."
@@ -16,14 +16,14 @@ def input_students
     end
     # Checking typos
     puts "You have entered:"
-    puts "Name: #{name}, Cohort: #{cohort}."
+    puts "Name: #{name}, Cohort: #{cohort}"
     puts "Is this correct? Y/N"
     response = gets.chomp.downcase
     if response == "n"
       puts "Please re-enter name:"
       name = gets.chomp
       puts "Please re-enter cohort:"
-      cohort = gets.chomp.to_sym
+      cohort = gets.chomp
     end
     # add the student hash to the array
     students << {name: name, cohort: cohort, age: :age, city_of_birth: :city, language_of_choice: :language, gender: :gender}
@@ -34,29 +34,52 @@ def input_students
   end
   # return the array of students
   students
+  # puts students[:cohort]
 end
 
 def print_header
-  puts "The students of Villains Academy"
+  puts "The students of Villains Academy".center(80)
+  puts ("-" * 80).center(80)
+end
+
+def print_month(month)
   puts "-------------"
+  month.each do |student|
+    student.each do |key, value|
+      puts "#{key}: #{value}"
+    end
+    puts "-------------"
+  end
 end
 
 def print(students)
-  line_width = 50
   counter = 0
   until counter == students.count
-    puts "#{counter+1}. #{students[counter][:name]}".ljust(line_width/3) + " | #{students[counter][:cohort].capitalize} cohort".center(line_width/3)
-    puts " | #{students[counter][:age]}".center(line_width/2) + " | #{students[counter][:city_of_birth]}".center(line_width/2) +
-        " | #{students[counter][:language_of_choice]}".center(line_width/2) + " | #{students[counter][:gender]}".rjust(line_width/2)
+    puts "#{counter+1}. #{students[counter][:name]}, (#{students[counter][:cohort]} cohort), #{students[counter][:age]}, #{students[counter][:city_of_birth]}, #{students[counter][:language_of_choice]}, #{students[counter][:gender]}"
     counter += 1
   end
 end
 
+# Sorting students by cohort month
+def print_cohort(students)
+  puts "Select Students by cohort start month:"
+  cohort = gets.chomp.downcase
+  students_cohort = students.map do |student|
+    if student[:cohort] == cohort
+      puts ("-" * 80).center(80)
+      puts student[:cohort].capitalize
+      puts "#{student[:name]}, (#{student[:cohort]} Cohort), #{student[:age]}, #{student[:city_of_birth]}, #{student[:language_of_choice]}, #{student[:gender]}"
+    end
+  end
+end
+
 def print_footer(names)
+  puts ("-" * 80).center(80)
   puts "Overall we have #{names.count} great students."
 end
 
 students = input_students
 print_header
 print(students)
+print_cohort(students)
 print_footer(students)
