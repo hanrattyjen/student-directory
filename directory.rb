@@ -38,7 +38,11 @@ def input_students
   end
   # return the array of students
   students
-  # puts students[:cohort]
+  if students.length == 0
+    puts "No student records to print."
+    exit
+  end
+  students
 end
 
 def print_header
