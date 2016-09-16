@@ -12,7 +12,7 @@ def input_students
     puts "Age:"
     age = gets.chomp
     puts "City of birth:"
-    city = gets.chomp
+    city_of_birth = gets.chomp
     puts "Preferred coding language:"
     language = gets.chomp
     puts "Gender"
@@ -24,7 +24,7 @@ def input_students
     end
     # Checking typos
     puts "You have entered:"
-    puts "Name: #{name}, Cohort: #{cohort}, Age: #{age}, City of birth: #{city}, Coding language: #{language}, Gender: #{gender}"
+    puts "Name: #{name}, Cohort: #{cohort}, Age: #{age}, City of birth: #{city_of_birth}, Coding language: #{language}, Gender: #{gender}"
     puts "Is this correct? Y/N"
     response = gets.chomp.downcase
     if response == "n"
@@ -35,14 +35,14 @@ def input_students
       puts "Please re-enter age:"
       age = gets.chomp
       puts "Please re-enter city of birth:"
-      city = gets.chomp
+      city_of_birth = gets.chomp
       puts "Please re-enter your preferred coding language:"
       language = gets.chomp
       puts "Please re-enter gender:"
       gender = gets.chomp
     end
     # add the student hash to the array
-    @students << {name: name, cohort: cohort, age: age, city_of_birth: city, language: language, gender: gender}
+    @students << {name: name, cohort: cohort, age: age, city_of_birth: city_of_birth, language: language, gender: gender}
     if @students.count == 1
       puts "Overall we have 1 great student."
     else
@@ -73,6 +73,7 @@ def print_menu
   puts "1. Input students"
   puts "2. Show students"
   puts "3. Save students to students.csv"
+  puts "4. Load students from students.csv"
   puts "9. Exit"
 end
 
@@ -84,6 +85,8 @@ def process(selection)
       show_students
     when "3"
       save_students
+    when "4"
+      load_students
     when "9"
       exit  # this will cause the program to terminate
     else
@@ -139,6 +142,15 @@ def print_footer
   else
     puts "Overall we have #{@students.count} great students."
   end
+end
+
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name,cohort,age,city_of_birth,language,gender = line.chomp.split(',')
+    @students << {name: name, cohort: cohort, age: age, city_of_birth: city_of_birth, language: language, gender: gender}
+  end
+  file.close
 end
 
 def save_students
