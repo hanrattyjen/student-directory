@@ -80,14 +80,19 @@ end
 def process(selection)
   case selection
     when "1"
+      puts "You have selected to input a new student"
       input_students
     when "2"
+      puts "Printing current student list:"
       show_students
     when "3"
+      puts "Saving inputted students to 'students.csv'"
       save_students
     when "4"
+      puts "Loading saved students from 'students.csv'"
       load_students
     when "9"
+      puts "Exiting..."
       exit
     else
       puts "I did not understand that. Please try again."
