@@ -163,17 +163,32 @@ def try_load_students
 end
 
 def save_students
-  # open the file for writing
   puts "Which file would you like to save in?"
   file_to_save = STDIN.gets.chomp
-  file = File.open("#{file_to_save}", "w")
-  # iterate of the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  if !File.exists?(file_to_save)
+    puts "File does not exist. Would you like to create #{file_to_save}? Y/N"
+    response = STDIN.gets.chomp
+    if response == "y"
+      saving_to_file(file_to_save)
+    elsif response == "n"
+      puts "Going back to menu"
+    else
+      puts "Sorry, I did not understand that. Please try again."
+    end
+  else
+    puts "This file currently exists. We will overwrite student data to this file."
+    saving_to_file(file_to_save)
   end
-  file.close
+end
+
+def saving_to_file(file_to_save)
+  File.open("#{file_to_save}", "w") do |f|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
+      csv_line = student_data.join(",")
+      f.puts csv_line
+    end
+  end
 end
 
 def student_counter
