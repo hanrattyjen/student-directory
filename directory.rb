@@ -1,48 +1,35 @@
 @students = [] # this array is accessible to all methods
+@name = String.new
+@cohort = String.new
+@age = String.new
+@city_of_birth = String.new
+@gender = String.new
 
 def input_students
   puts "Please enter the names of the students:"
   puts "To finish, just hit enter twice."
   # get the first name
-  name = STDIN.gets.chomp
+  @name = STDIN.gets.chomp
   # while the name is not empty, repeat this code
-  while !name.empty? do
-    puts "Cohort month:"
-    cohort = STDIN.gets.chomp
-    puts "Age:"
-    age = STDIN.gets.chomp
-    puts "City of birth:"
-    city_of_birth = STDIN.gets.chomp
-    puts "Preferred coding language:"
-    language = STDIN.gets.chomp
-    puts "Gender"
-    gender = STDIN.gets.chomp
+  while !@name.empty? do
+    student_questions
     # Supplying a default value
-    if cohort.empty?
+    if @cohort.empty?
       puts "You haven't entered a value. Please contact us."
-      cohort = "NO VALUE"
+      @cohort = "NO VALUE"
     end
     # Checking typos
     puts "You have entered:"
-    puts "Name: #{name}, Cohort: #{cohort}, Age: #{age}, City of birth: #{city_of_birth}, Coding language: #{language}, Gender: #{gender}"
+    puts "Name: #{@name}, Cohort: #{@cohort}, Age: #{@age}, City of birth: #{@city_of_birth}, Coding language: #{@language}, Gender: #{@gender}"
     puts "Is this correct? Y/N"
     response = STDIN.gets.chomp.downcase
     if response == "n"
       puts "Please re-enter name:"
-      name = STDIN.gets.chomp
-      puts "Please re-enter cohort:"
-      cohort = STDIN.gets.chomp
-      puts "Please re-enter age:"
-      age = STDIN.gets.chomp
-      puts "Please re-enter city of birth:"
-      city_of_birth = STDIN.gets.chomp
-      puts "Please re-enter your preferred coding language:"
-      language = STDIN.gets.chomp
-      puts "Please re-enter gender:"
-      gender = STDIN.gets.chomp
+      @name = STDIN.gets.chomp
+      student_questions
     end
     # add the student hash to the array
-    @students << {name: name, cohort: cohort, age: age, city_of_birth: city_of_birth, language: language, gender: gender}
+    students_into_hash
     if @students.count == 1
       puts "Overall we have 1 great student."
     else
@@ -50,19 +37,33 @@ def input_students
     end
     puts "Please enter another student, or hit Enter twice to exit."
     # get another name from the user
-    name = STDIN.gets.chomp
+    @name = STDIN.gets.chomp
   end
-  # return the array of students
-  # students
   if @students.length == 0
     puts "No student records to print."
     exit
   end
-  # students
+end
+
+def student_questions
+  puts "Cohort month:"
+  @cohort = STDIN.gets.chomp
+  puts "Age:"
+  @age = STDIN.gets.chomp
+  puts "City of birth:"
+  @city_of_birth = STDIN.gets.chomp
+  puts "Preferred coding language:"
+  @language = STDIN.gets.chomp
+  puts "Gender:"
+  @gender = STDIN.gets.chomp
+end
+
+def students_into_hash
+  @students << {name: @name, cohort: @cohort, age: @age, city_of_birth: @city_of_birth, language: @language, gender: @gender}
+  return @students
 end
 
 def interactive_menu
-  try_load_students
   puts "Welcome to student input. Choose an action from the menu below:"
   loop do
     print_menu
@@ -148,8 +149,9 @@ end
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
-    name,cohort,age,city_of_birth,language,gender = line.chomp.split(',')
-    @students << {name: name, cohort: cohort, age: age, city_of_birth: city_of_birth, language: language, gender: gender}
+    @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
+    students_into_hash
+    # @students << {name: name, cohort: cohort, age: age, city_of_birth: city_of_birth, language: language, gender: gender}
   end
   file.close
 end
@@ -178,5 +180,6 @@ def save_students
   file.close
 end
 
+try_load_students
 interactive_menu
 # print_cohort(students)
