@@ -151,15 +151,15 @@ def load_students(filename = "students.csv")
   file.readlines.each do |line|
     @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
     students_into_hash
-    # @students << {name: name, cohort: cohort, age: age, city_of_birth: city_of_birth, language: language, gender: gender}
   end
   file.close
 end
 
 def try_load_students
    filename = ARGV.first # first argument from the command line
-   return if filename.nil? #get out of the method if it isn't given
-   if File.exists?(filename)
+   if filename.nil?
+     load_students("students.csv") # load as default if no argument given
+   elsif File.exists?(filename)
      load_students(filename)
      puts "Loaded #{@students.count} from #{filename}"
    else
