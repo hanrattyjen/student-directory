@@ -1,9 +1,8 @@
-@students = []
+@students = [] # this array is accessible to all methods
 
 def input_students
   puts "Please enter the names of the students:"
   puts "To finish, just hit enter twice."
-  # create an empty array
   # get the first name
   name = gets.chomp
   # while the name is not empty, repeat this code
@@ -25,7 +24,7 @@ def input_students
     end
     # Checking typos
     puts "You have entered:"
-    puts "Name: #{name}, Cohort: #{cohort}, Age: #{age}, City of birth: #{city}"
+    puts "Name: #{name}, Cohort: #{cohort}, Age: #{age}, City of birth: #{city}, Coding language: #{language}, Gender: #{gender}"
     puts "Is this correct? Y/N"
     response = gets.chomp.downcase
     if response == "n"
@@ -43,7 +42,7 @@ def input_students
       gender = gets.chomp
     end
     # add the student hash to the array
-    @students << {name: name, cohort: cohort, age: age, city_of_birth: city, language_of_choice: language, gender: gender}
+    @students << {name: name, cohort: cohort, age: age, city_of_birth: city, language: language, gender: gender}
     if @students.count == 1
       puts "Overall we have 1 great student."
     else
@@ -70,12 +69,21 @@ def interactive_menu
   end
 end
 
+def print_menu
+  puts "1. Input students"
+  puts "2. Show students"
+  puts "3. Save students to students.csv"
+  puts "9. Exit"
+end
+
 def process(selection)
   case selection
     when "1"
       students = input_students
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit  # this will cause the program to terminate
     else
@@ -83,15 +91,9 @@ def process(selection)
     end
 end
 
-def print_menu
-  puts "1. Input students"
-  puts "2. Show students"
-  puts "9. Exit"
-end
-
 def show_students
   print_header
-  print_students_list
+  print_student_list
   print_footer
 end
 
@@ -110,11 +112,9 @@ def print_month(month)
   end
 end
 
-def print_students_list
-  counter = 0
-  until counter == @students.count
-    puts "#{counter+1}. #{@students[counter][:name]}, (#{@students[counter][:cohort]} cohort), #{@students[counter][:age]}, #{@students[counter][:city_of_birth]}, #{@students[counter][:language_of_choice]}, #{@students[counter][:gender]}"
-    counter += 1
+def print_student_list
+  @students.each_with_index do |student, index|
+    puts "#{index+1}. #{student[:name]}, (#{student[:cohort]} cohort), #{student[:age]}, #{student[:city_of_birth]}, #{student[:language]}, #{student[:gender]}"
   end
   puts ("-" * 80).center(80)
 end
@@ -127,7 +127,7 @@ def print_cohort(students)
     if student[:cohort] == cohort
       puts ("-" * 80).center(80)
       puts student[:cohort].capitalize
-      puts "#{student[:name]}, (#{student[:cohort]} Cohort), #{student[:age]}, #{student[:city_of_birth]}, #{student[:language_of_choice]}, #{student[:gender]}"
+      puts "#{student[:name]}, (#{student[:cohort]} Cohort), #{student[:age]}, #{student[:city_of_birth]}, #{student[:language]}, #{student[:gender]}"
     end
   end
 end
@@ -139,6 +139,18 @@ def print_footer
   else
     puts "Overall we have #{@students.count} great students."
   end
+end
+
+def save_students
+  # open the file for writing
+  file = File.open("students.csv", "w")
+  # iterate of the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 interactive_menu
