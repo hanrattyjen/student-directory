@@ -19,9 +19,7 @@ def input_students
 end
 
 def confirm_details
-  puts "You have entered:"
-  puts "Name: #{@name}, Cohort: #{@cohort}, Age: #{@age}, City of birth: #{@city_of_birth}, Coding language: #{@language}, Gender: #{@gender}"
-  puts "Is this correct? Y/N"
+  print_confirm_student_information
   response = STDIN.gets.chomp.downcase
   if response == "n"
     puts "Please re-enter name:"
@@ -40,6 +38,12 @@ def confirm_details
   students_into_hash
   student_counter
   input_students
+end
+
+def print_confirm_student_information
+  puts "You have entered:"
+  puts "Name: #{@name}, Cohort: #{@cohort}, Age: #{@age}, City of birth: #{@city_of_birth}, Coding language: #{@language}, Gender: #{@gender}"
+  puts "Is this correct? Y/N"
 end
 
 def student_questions
@@ -72,8 +76,8 @@ end
 def print_menu
   puts "1. Input students"
   puts "2. Show students"
-  puts "3. Save students to students.csv"
-  puts "4. Load students from students.csv"
+  puts "3. Save students to a file"
+  puts "4. Load students from a file"
   puts "9. Exit"
 end
 
@@ -86,10 +90,10 @@ def process(selection)
       puts "Printing current student list:"
       show_students
     when "3"
-      puts "Saving inputted students to 'students.csv'"
+      puts "Saving inputted students to file"
       save_students
     when "4"
-      puts "Loading saved students from 'students.csv'"
+      puts "Loading saved students from file"
       load_students
     when "9"
       puts "Exiting..."
@@ -126,13 +130,23 @@ def print_footer
   print_line_separator
 end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
-    students_into_hash
+def load_students #(filename = "students.csv")
+  puts "Which file would you like to open?"
+  file_to_open = STDIN.gets.chomp
+  if File.exists?(file_to_open)
+    file = File.open(file_to_open, "r")
+    file.readlines.each do |line|
+      @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
+      students_into_hash
+    end
+    file.close
+  elsif file_to_open.empty?
+    puts "No file name entered."
+    print_line_separator
+  else
+    puts "File does not exist."
+    print_line_separator
   end
-  file.close
 end
 
 def try_load_students
@@ -150,7 +164,9 @@ end
 
 def save_students
   # open the file for writing
-  file = File.open("students.csv", "w")
+  puts "Which file would you like to save in?"
+  file_to_save = STDIN.gets.chomp
+  file = File.open("#{file_to_save}", "w")
   # iterate of the array of students
   @students.each do |student|
     student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
@@ -172,5 +188,5 @@ def print_line_separator
   puts ("-" * 80).center(80)
 end
 
-try_load_students
+# try_load_students
 interactive_menu
