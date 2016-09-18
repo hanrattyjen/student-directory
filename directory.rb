@@ -131,6 +131,7 @@ def print_footer
   student_counter
   print_line_separator
 end
+
 def load_students
   puts "Which file would you like to open?"
   file_to_open = STDIN.gets.chomp
@@ -143,11 +144,6 @@ def load_students
       new_student_hash = Hash[*([:name, :cohort, :age, :city_of_birth, :language, :gender].zip(array_to_string.split(',')).flatten)]
       @students << new_student_hash
     end
-    # file.readlines.each do |line|
-    #   @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
-    #   students_into_hash
-    # end
-    # file.close
   elsif file_to_open.empty?
     puts "No file name entered."
     print_line_separator
@@ -155,8 +151,6 @@ def load_students
     puts "File does not exist."
     print_line_separator
   end
-  puts @students
-
 end
 
 def try_load_students
@@ -192,11 +186,18 @@ def save_students
 end
 
 def saving_to_file(file_to_save)
-  File.open("#{file_to_save}", "w") do |f|
+  CSV.open("#{file_to_save}", "w") do |csv_object|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
-      csv_line = student_data.join(",")
-      f.puts csv_line
+      # need to change this to an array of strings
+      student_data_to_array = []
+      student.each do |k,v|
+        student_data_to_array << v
+      end
+      csv_object << student_data_to_array
+      # puts csv_object.inspect
+      # student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
+      # csv_line = student_data.join(",")
+      # f.puts csv_line
     end
   end
 end
