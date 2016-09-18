@@ -1,3 +1,5 @@
+require 'csv'
+
 @students = [] # this array is accessible to all methods
 @name = String.new
 @cohort = String.new
@@ -129,17 +131,23 @@ def print_footer
   student_counter
   print_line_separator
 end
-
-def load_students #(filename = "students.csv")
+def load_students
   puts "Which file would you like to open?"
   file_to_open = STDIN.gets.chomp
   if File.exists?(file_to_open)
-    file = File.open(file_to_open, "r")
-    file.readlines.each do |line|
-      @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
-      students_into_hash
+    file = CSV.read("#{file_to_open}")
+    CSV.foreach("#{file_to_open}") do |row|
+      # The CSV data from file is an array.
+      array_to_string = row.join(",") # converting array to a String
+      # creating hash from the array/string
+      new_student_hash = Hash[*([:name, :cohort, :age, :city_of_birth, :language, :gender].zip(array_to_string.split(',')).flatten)]
+      @students << new_student_hash
     end
-    file.close
+    # file.readlines.each do |line|
+    #   @name,@cohort,@age,@city_of_birth,@language,@gender = line.chomp.split(',')
+    #   students_into_hash
+    # end
+    # file.close
   elsif file_to_open.empty?
     puts "No file name entered."
     print_line_separator
@@ -147,6 +155,8 @@ def load_students #(filename = "students.csv")
     puts "File does not exist."
     print_line_separator
   end
+  puts @students
+
 end
 
 def try_load_students
