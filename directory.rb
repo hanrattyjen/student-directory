@@ -193,11 +193,7 @@ def saving_to_file(file_to_save)
       student.each do |k,v|
         student_data_to_array << v
       end
-      csv_object << student_data_to_array
-      # puts csv_object.inspect
-      # student_data = [student[:name], student[:cohort], student[:age], student[:city_of_birth], student[:language], student[:gender]]
-      # csv_line = student_data.join(",")
-      # f.puts csv_line
+      csv_object << student_data_to_array #appends our student data array to the CSV file
     end
   end
 end
